@@ -114,16 +114,29 @@ button{
 }
 
 #celebration h1{
-  font-size:3.5rem;
-  margin-bottom:14px;
-  text-shadow:0 0 30px #fff;
+  font-size:2.6rem;
+  margin-bottom:12px;
+  text-align:center;
+  text-shadow:0 0 18px rgba(255,255,255,0.8);
 }
 
 #celebration p{
-  font-size:1.2rem;
-  max-width:320px;
-  line-height:1.6;
+  font-size:1.05rem;
+  max-width:280px;
+  line-height:1.7;
+  opacity:0.95;
+  text-align:center;
 }
+  
+function boostSnow(){
+  flakes.forEach(f => f.s += 0.2);
+}
+
+preview.onclick = () => {
+  celebration.classList.add("show");
+  boostSnow();
+};
+
 </style>
 </head>
 
