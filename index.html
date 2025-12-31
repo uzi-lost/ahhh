@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>New Year</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  height:100vh;
+  background:linear-gradient(135deg,#b56bd6,#f3a4c7);
+  overflow:hidden;
+  color:#fff;
+  font-family:'Playfair Display',serif;
+}
+
+/* Snow */
+canvas{
+  position:fixed;
+  inset:0;
+  z-index:0;
+}
+
+/* Main card */
+#main{
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  position:relative;
+  z-index:1;
+}
+
+.card{
+  width:90%;
+  max-width:360px;
+  padding:26px;
+  background:rgba(255,255,255,0.12);
+  border-radius:24px;
+  backdrop-filter:blur(10px);
+  text-align:center;
+}
+
+/* Name */
+.name{
+  font-family:'Dancing Script',cursive;
+  font-size:3rem;
+  margin-bottom:10px;
+  text-shadow:0 0 25px rgba(255,255,255,0.6);
+}
+
+/* Message under name */
+.message{
+  font-size:1rem;
+  line-height:1.7;
+  margin-bottom:18px;
+  padding:10px;
+  background:rgba(255,255,255,0.05);
+  border-left:3px solid rgba(255,255,255,0.4);
+}
+
+/* Timer */
+#timer{
+  font-size:1.8rem;
+  letter-spacing:3px;
+  margin-bottom:18px;
+}
+
+/* Button */
+button{
+  padding:10px 24px;
+  border-radius:30px;
+  background:transparent;
+  border:1px solid rgba(255,255,255,0.5);
+  color:white;
+  cursor:pointer;
+}
+
+/* Tulips bottom */
+.tulips{
+  position:fixed;
+  bottom:12px;
+  width:100%;
+  text-align:center;
+  font-size:2rem;
+  text-shadow:0 0 15px #ff5fa2;
+  z-index:1;
+}
+
+/* Celebration */
+#celebration{
+  position:fixed;
+  inset:0;
+  background:linear-gradient(180deg,#1a1a2e,#162447);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .8s ease;
+  z-index:3;
+}
+
+#celebration.show{
+  opacity:1;
+  pointer-events:all;
+}
+
+#celebration h1{
+  font-size:3.5rem;
+  margin-bottom:14px;
+  text-shadow:0 0 30px #fff;
+}
+
+#celebration p{
+  font-size:1.2rem;
+  max-width:320px;
+  line-height:1.6;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="snow"></canvas>
+
+<div id="main">
+  <div class="card">
+    <div class="name">HER NAME 🌷</div>
+
+    <div class="message">
+      These words are just for you.  
+      Quiet. Honest. Real.
+    </div>
+
+    <div id="timer">-- : -- : -- : --</div>
+
+    <button id="preview">Preview New Year</button>
+  </div>
+</div>
+
+<div class="tulips">🌷 🌷 🌷 🌷 🌷</div>
+
+<div id="celebration">
+  <h1>Happy New Year ✨</h1>
+  <p>
+    May this year bring peace, warmth,  
+    and moments that truly matter.
+  </p>
+</div>
+
+<script>
+/* TIMER */
+const timerEl=document.getElementById("timer");
+const preview=document.getElementById("preview");
+const celebration=document.getElementById("celebration");
+
+/* Pakistan time target */
+const target=new Date("2026-01-01T00:00:00+05:00").getTime();
+
+function tick(){
+  let now=Date.now();
+  let diff=target-now;
+
+  if(diff<=0){
+    timerEl.textContent="00 : 00 : 00 : 00";
+    celebration.classList.add("show");
+    clearInterval(loop);
+    return;
+  }
+
+  const d=Math.floor(diff/86400000);
+  diff%=86400000;
+  const h=Math.floor(diff/3600000);
+  diff%=3600000;
+  const m=Math.floor(diff/60000);
+  const s=Math.floor(diff/1000%60);
+
+  timerEl.textContent=
+    String(d).padStart(2,"0")+" : "+
+    String(h).padStart(2,"0")+" : "+
+    String(m).padStart(2,"0")+" : "+
+    String(s).padStart(2,"0");
+}
+
+preview.onclick=()=>celebration.classList.add("show");
+
+tick();
+const loop=setInterval(tick,1000);
+
+/* SNOW (FAST) */
+const c=document.getElementById("snow");
+const ctx=c.getContext("2d");
+c.width=innerWidth;c.height=innerHeight;
+
+const flakes=[...Array(45)].map(()=>({
+  x:Math.random()*c.width,
+  y:Math.random()*c.height,
+  r:Math.random()*2+1,
+  s:Math.random()*0.6+0.4
+}));
+
+function snow(){
+  ctx.clearRect(0,0,c.width,c.height);
+  ctx.fillStyle="rgba(255,255,255,0.7)";
+  flakes.forEach(f=>{
+    ctx.beginPath();
+    ctx.arc(f.x,f.y,f.r,0,Math.PI*2);
+    ctx.fill();
+    f.y+=f.s;
+    if(f.y>c.height)f.y=-5;
+  });
+  requestAnimationFrame(snow);
+}
+snow();
+</script>
+
+</body>
+</html>
